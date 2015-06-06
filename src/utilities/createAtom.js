@@ -10,8 +10,8 @@ export default function createAtom(store) {
   }
 
   function performAction(action) {
-    if (typeof result === 'function') {
-      return action(dispatch, state)
+    if (typeof action === 'function') {
+      return action(performAction, state)
     } else {
       return dispatch(action)
     }
