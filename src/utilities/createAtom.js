@@ -1,12 +1,21 @@
-import Rx from 'rx'
-
 export default function createAtom(store) {
-  const observable = new Rx.BehaviorSubject({})
   let state = {}
+  let listeners = []
+
+  function subscribe(listener) {
+    listeners.push(listener)
+
+    listener(state)
+
+    return () => {
+      listeners = listeners.filter(l => l !== listener)
+    }
+  }
 
   function dispatch(action) {
     state = store(state, action)
-    observable.onNext(state)
+
+    listeners.forEach(listener => listener(state))
   }
 
   function performAction(action) {
@@ -20,7 +29,7 @@ export default function createAtom(store) {
   dispatch({type: undefined})
 
   return {
-    observable,
+    subscribe,
     performAction
   }
 }
