@@ -11,3 +11,17 @@ export function createNewItem() {
     }
   }
 }
+
+export function createNewItemWithDelay(delay) {
+  return (performAction, state) => {
+    setTimeout(() => {
+      performAction(createNewItem())
+    }, delay)
+  }
+}
+
+export function createNewItemAfterSecond() {
+  return (performAction, state) => {
+    performAction(createNewItemWithDelay(1000))
+  }
+}
